@@ -52,7 +52,11 @@
         <%= form.label :valor_estimado, "Valor Estimado (R$)", class: "ui label" %>
         <div class="ui left icon input">
           <i class="dollar sign icon"></i>
-          <%= form.number_field :valor_estimado, step: 0.01, min: 0.01, placeholder: "0,00", required: true %>
+          <%= form.text_field :valor_estimado,
+                              maxlength: 9,
+                              inputmode: "decimal",
+                              placeholder: "0,00",
+                              required: true %>
         </div>
       </div>
 
@@ -67,12 +71,36 @@
 
 <script>
     $(document).ready(function() {
-        $('#corrida_valor_estimado').on('input', function() {
+        const valorInput = $('#corrida_valor_estimado');
+
+        // Formata ao sair do campo
+        valorInput.on('blur', function() {
             let value = $(this).val();
-            if (value) {
-                value = parseFloat(value).toFixed(2);
-                $(this).val(value);
-            }
+
+            if (!value) return;
+
+            let valueInCents = value.replace(/[^\d]/g, '');
+
+            if (valueInCents === '') return;
+
+            let number = parseFloat(valueInCents) / 100;
+
+            const formatter = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+
+            $(this).val(formatter.format(number));
+        });
+
+        $('form').on('submit', function() {
+            let value = valorInput.val();
+
+            if (!value) return;
+
+            let valueForRails = value.replace(/[^\d,]/g, '').replace(',', '.');
+
+            valorInput.val(valueForRails);
         });
     });
 </script>
