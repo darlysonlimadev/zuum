@@ -1,0 +1,77 @@
+<% content_for :title, "Usuários" %>
+
+<div class="header-section">
+  <div class="ui grid">
+    <div class="twelve wide column">
+      <h1 class="ui header">
+        <i class="users icon"></i>
+        <div class="content">
+          Usuários
+          <div class="sub header">Gerencie os usuários do sistema</div>
+        </div>
+      </h1>
+    </div>
+    <div class="four wide column">
+      <div class="ui right floated buttons">
+        <%= link_to "Novo Usuário", new_usuario_path, class: "ui primary button" %>
+        <%= link_to "Ver Corridas", corridas_path, class: "ui button" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @usuarios.any? %>
+  <div class="ui cards">
+    <% @usuarios.each do |usuario| %>
+      <div class="card">
+        <div class="content">
+          <div class="header">
+            <i class="user icon"></i>
+            <%= usuario.nome %>
+          </div>
+          <div class="meta">
+            <span class="date">
+              <i class="id card icon"></i>
+              CPF: <%= formatar_cpf(usuario.cpf) %>
+            </span>
+          </div>
+          <div class="description">
+            <div class="ui list">
+              <div class="item">
+                <i class="phone icon"></i>
+                <div class="content">
+                  <%= formatar_telefone(usuario.telefone) %>
+                </div>
+              </div>
+              <div class="item">
+                <i class="car icon"></i>
+                <div class="content">
+                  <%= pluralize(usuario.corridas.count, 'corrida') %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="ui three buttons">
+            <%= link_to "Ver", usuario_path(usuario), class: "ui tiny button" %>
+            <%= link_to "Editar", edit_usuario_path(usuario), class: "ui tiny blue button" %>
+            <%= link_to "Excluir", usuario_path(usuario),
+                        data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir este usuário? Todas as corridas associadas também serão removidas." },
+                        class: "ui tiny red button" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="ui placeholder segment">
+    <div class="ui icon header">
+      <i class="users icon"></i>
+      Nenhum usuário cadastrado
+    </div>
+    <div class="inline">
+      <%= link_to "Cadastrar primeiro usuário", new_usuario_path, class: "ui primary button" %>
+    </div>
+  </div>
+<% end %>

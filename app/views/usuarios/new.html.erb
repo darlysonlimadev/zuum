@@ -1,0 +1,104 @@
+<% content_for :title, "Novo Usuário" %>
+
+<div class="header-section">
+  <h1 class="ui header">
+    <i class="user plus icon"></i>
+    <div class="content">
+      Novo Usuário
+      <div class="sub header">Cadastre um novo usuário no sistema</div>
+    </div>
+  </h1>
+</div>
+
+<div class="form-container">
+  <div class="ui segment">
+    <%= form_with model: @usuario, local: true, class: "ui form #{'error' if @usuario.errors.any?}" do |form| %>
+      <% if @usuario.errors.any? %>
+        <div class="ui error message">
+          <div class="header">Erro ao cadastrar usuário:</div>
+          <ul class="list">
+            <% @usuario.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :nome, "Nome Completo", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="user icon"></i>
+          <%= form.text_field :nome, placeholder: "Ex: João Silva Santos", required: true %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= form.label :cpf, "CPF", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="id card icon"></i>
+          <%= form.text_field :cpf, placeholder: "000.000.000-00", required: true, maxlength: 14 %>
+        </div>
+        <div class="ui pointing label">
+          Digite apenas os números do CPF
+        </div>
+      </div>
+
+      <div class="field">
+        <%= form.label :telefone, "Telefone", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="phone icon"></i>
+          <%= form.text_field :telefone, placeholder: "(85) 99999-9999", required: true, maxlength: 15 %>
+        </div>
+        <div class="ui pointing label">
+          Formato: (XX) XXXXX-XXXX
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <%= form.submit "Cadastrar Usuário", class: "ui primary button" %>
+        <%= link_to "Cancelar", usuarios_path, class: "ui button" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // CPF mascara
+        function maskCPF(value) {
+            value = value.replace(/\D/g, '');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            return value;
+        }
+
+        let cpfInput = $('#usuario_cpf');
+        cpfInput.val(maskCPF(cpfInput.val())); // Aplica a máscara ao carregar
+
+        cpfInput.on('input', function() {
+            $(this).val(maskCPF($(this).val()));
+        });
+
+        // Telefone mascara
+        function maskPhone(value) {
+            value = value.replace(/\D/g, '');
+            value = value.substring(0, 11);
+            if (value.length <= 10) {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            } else {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            }
+            return value;
+        }
+
+        let phoneInput = $('#usuario_telefone');
+        phoneInput.val(maskPhone(phoneInput.val())); // Aplica a máscara ao carregar
+
+        phoneInput.on('input', function() {
+            $(this).val(maskPhone($(this).val()));
+        });
+    });
+</script>

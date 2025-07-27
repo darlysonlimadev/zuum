@@ -1,0 +1,174 @@
+<% content_for :title, "Detalhes da Corrida" %>
+
+<div class="header-section">
+  <div class="ui grid">
+    <div class="twelve wide column">
+      <h1 class="ui header">
+        <i class="car icon"></i>
+        <div class="content">
+          Detalhes da Corrida
+          <div class="sub header">Corrida #<%= @corrida.id %></div>
+        </div>
+      </h1>
+    </div>
+    <div class="four wide column">
+      <div class="ui right floated buttons">
+        <%= link_to "Editar", edit_corrida_path(@corrida), class: "ui blue button" %>
+        <%= link_to "Voltar", corridas_path, class: "ui button" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ui two column grid">
+  <!-- Informações do Usuário -->
+  <div class="column">
+    <div class="ui card" style="width: 100%;">
+      <div class="content">
+        <div class="header">
+          <i class="user icon"></i>
+          Informações do Usuário
+        </div>
+      </div>
+      <div class="content">
+        <div class="ui list">
+          <div class="item">
+            <i class="user icon"></i>
+            <div class="content">
+              <div class="header">Nome</div>
+              <%= @corrida.usuario.nome %>
+            </div>
+          </div>
+          <div class="item">
+            <i class="id card icon"></i>
+            <div class="content">
+              <div class="header">CPF</div>
+              <%= @corrida.usuario.cpf %>
+            </div>
+          </div>
+          <div class="item">
+            <i class="phone icon"></i>
+            <div class="content">
+              <div class="header">Telefone</div>
+              <%= @corrida.usuario.telefone %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="extra content">
+        <%= link_to "Ver perfil completo", @corrida.usuario, class: "ui button" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informações da Corrida -->
+  <div class="column">
+    <div class="ui card" style="width: 100%;">
+      <div class="content">
+        <div class="header">
+          <i class="route icon"></i>
+          Detalhes da Corrida
+        </div>
+      </div>
+      <div class="content">
+        <div class="ui list">
+          <div class="item">
+            <i class="map marker alternate icon green"></i>
+            <div class="content">
+              <div class="header">Origem</div>
+              <%= @corrida.endereco_partida %>
+            </div>
+          </div>
+          <div class="item">
+            <i class="map marker alternate icon red"></i>
+            <div class="content">
+              <div class="header">Destino</div>
+              <%= @corrida.endereco_destino %>
+            </div>
+          </div>
+          <div class="item">
+            <i class="clock icon"></i>
+            <div class="content">
+              <div class="header">Data e Hora</div>
+              <%= @corrida.created_at.strftime("%d/%m/%Y às %H:%M") %>
+            </div>
+          </div>
+          <div class="item">
+            <i class="dollar sign icon"></i>
+            <div class="content">
+              <div class="header">Valor Estimado</div>
+              <span class="ui green label">
+                R$ <%= number_with_precision(@corrida.valor_estimado, precision: 2) %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Histórico -->
+<div class="ui segment">
+  <h3 class="ui header">
+    <i class="history icon"></i>
+    Histórico
+  </h3>
+  <div class="ui timeline">
+    <div class="event">
+      <div class="label">
+        <i class="plus icon"></i>
+      </div>
+      <div class="content">
+        <div class="summary">
+          Corrida criada
+          <div class="date">
+            <%= @corrida.created_at.strftime("%d/%m/%Y às %H:%M") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if @corrida.updated_at != @corrida.created_at %>
+      <div class="event">
+        <div class="label">
+          <i class="edit icon"></i>
+        </div>
+        <div class="content">
+          <div class="summary">
+            Última atualização
+            <div class="date">
+              <%= @corrida.updated_at.strftime("%d/%m/%Y às %H:%M") %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Ações -->
+<div class="ui segment">
+  <h3 class="ui header">
+    <i class="settings icon"></i>
+    Ações
+  </h3>
+  <div class="ui buttons">
+    <%= link_to edit_corrida_path(@corrida), class: "ui blue button" do %>
+      <i class="edit icon"></i>
+      Editar Corrida
+    <% end %>
+    <%= link_to @corrida,
+                data: {
+                  turbo_method: :delete,
+                  turbo_confirm: "Tem certeza que deseja excluir esta corrida?"
+                },
+                class: "ui red button" do %>
+      <i class="trash icon"></i>
+      Excluir Corrida
+    <% end %>
+    <%= link_to corridas_path, class: "ui button" do %>
+      <i class="arrow left icon"></i>
+      Voltar para Lista
+    <% end %>
+  </div>
+</div>

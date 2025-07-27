@@ -1,0 +1,2 @@
+module CorridasHelper
+end

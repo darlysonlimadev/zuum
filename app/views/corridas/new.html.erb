@@ -1,0 +1,109 @@
+<% content_for :title, "Nova Corrida" %>
+
+<div class="header-section">
+  <h1 class="ui header">
+    <i class="plus icon"></i>
+    <div class="content">
+      Nova Corrida
+      <div class="sub header">Solicite uma nova corrida</div>
+    </div>
+  </h1>
+</div>
+
+<div class="form-container">
+  <div class="ui segment">
+    <%= form_with model: @corrida, local: true, class: "ui form #{'error' if @corrida.errors.any?}" do |form| %>
+      <% if @corrida.errors.any? %>
+        <div class="ui error message">
+          <div class="header">Erro ao solicitar corrida:</div>
+          <ul class="list">
+            <% @corrida.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :usuario_id, "Usuário", class: "ui label" %>
+        <%= form.select :usuario_id,
+                        options_from_collection_for_select(@usuarios, :id, :nome, @corrida.usuario_id),
+                        { prompt: "Selecione o usuário..." },
+                        { class: "ui search dropdown", required: true } %>
+        <% if @usuarios.empty? %>
+          <div class="ui pointing label">
+            Nenhum usuário cadastrado. <%= link_to "Cadastre um usuário primeiro", new_usuario_path %>.
+          </div>
+        <% end %>
+      </div>
+
+      <div class="field">
+        <%= form.label :endereco_partida, "Endereço de Origem", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="map marker alternate icon green"></i>
+          <%= form.text_field :endereco_partida, placeholder: "Ex: Rua das Flores, 123 - Centro", required: true %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= form.label :endereco_destino, "Endereço de Destino", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="map marker alternate icon red"></i>
+          <%= form.text_field :endereco_destino, placeholder: "Ex: Av. Principal, 456 - Bairro Novo", required: true %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= form.label :valor_estimado, "Valor Estimado (R$)", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="dollar sign icon"></i>
+          <%= form.text_field :valor_estimado,
+                              maxlength: 9,          # Ajustado para 9 para acomodar "99.999,99"
+                              inputmode: "decimal",
+                              placeholder: "0,00",
+                              required: true %>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <%= form.submit "Solicitar Corrida", class: "ui primary button" %>
+        <%= link_to "Cancelar", corridas_path, class: "ui button" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        const valorInput = $('#corrida_valor_estimado');
+
+        valorInput.on('blur', function() {
+            let value = $(this).val();
+
+            if (!value) return;
+
+            let valueInCents = value.replace(/[^\d]/g, '');
+
+            if (valueInCents === '') return;
+
+            let number = parseFloat(valueInCents) / 100;
+
+            const formatter = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+
+            $(this).val(formatter.format(number));
+        });
+
+        $('form').on('submit', function() {
+            let value = valorInput.val();
+
+            if (!value) return;
+
+            let valueForRails = value.replace(/[^\d,]/g, '').replace(',', '.');
+
+            valorInput.val(valueForRails);
+        });
+    });
+</script>

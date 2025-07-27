@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Zuum" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <%= favicon_link_tag 'favicon.ico' %>
+
+    <%# Semantic UI CSS %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <%# Semantic UI JavaScript %>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <div class="ui inverted menu navbar">
+      <div class="ui container">
+        <%= link_to "Zuum - Sistema de Corridas", root_path, class: "header item" %>
+        <%= link_to "Corridas", corridas_path, class: "item" %>
+        <%= link_to "Usuários", usuarios_path, class: "item" %>
+        <div class="right menu">
+          <%= link_to "Nova Corrida", new_corrida_path, class: "ui primary button" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flash Messages -->
+    <% if notice %>
+      <div class="ui container">
+        <div class="ui positive message alert">
+          <i class="close icon"></i>
+          <%= notice %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div class="ui container">
+        <div class="ui negative message alert">
+          <i class="close icon"></i>
+          <%= alert %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Main Content -->
+    <div class="ui container main-container">
+      <%= yield %>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+        // Initialize Semantic UI components
+        $('.ui.dropdown').dropdown();
+        $('.message .close').on('click', function() {
+          $(this).closest('.message').transition('fade');
+        });
+
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+          $('.alert').transition('fade');
+        }, 5000);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,147 @@
+<% content_for :title, "Corridas" %>
+
+<div class="header-section">
+  <div class="ui grid">
+    <div class="twelve wide column">
+      <h1 class="ui header" style="display: flex; align-items: center; flex-wrap: wrap;">
+        <img src="<%= asset_path('logo.png') %>" alt="Zuum"
+             style="max-height: 55px; height: auto; width: auto; margin-right: 15px;" />
+        <div class="content">
+          Corridas
+          <div class="sub header">Gerencie as solicitações de corrida</div>
+        </div>
+      </h1>
+    </div>
+    <div class="four wide column">
+      <div class="ui right floated buttons">
+        <%= link_to "Nova Corrida", new_corrida_path, class: "ui primary button" %>
+        <%= link_to "Gerenciar Usuários", usuarios_path, class: "ui button" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Total de Corridas e Usuarios -->
+<div class="ui two column grid">
+  <div class="column">
+    <div class="stats-card">
+      <div class="stats-number"><%= @corridas.count %></div>
+      <div class="stats-label">Total de Corridas</div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="stats-card">
+      <div class="stats-number"><%= @usuarios.count %></div>
+      <div class="stats-label">Usuários Cadastrados</div>
+    </div>
+  </div>
+</div>
+
+<!-- Filtrar Usuario -->
+<div class="ui segment">
+  <h3 class="ui header">
+    <i class="filter icon"></i>
+    Filtrar por Usuário
+  </h3>
+  <%= form_with url: filtrar_usuario_corridas_path, method: :get, local: true, class: "ui form" do |form| %>
+    <div class="fields">
+      <div class="twelve wide field">
+        <%= form.label :usuario_id, "Usuário", class: "ui label" %>
+
+        <%= form.select :usuario_id,
+                        options_from_collection_for_select(@usuarios, :id, :nome, params[:usuario_id]),
+                        { prompt: "Selecione um usuário..." },
+                        {
+                          class: "ui search dropdown",
+                          required: true,
+                          disabled: @usuarios.empty?
+                        } %>
+
+        <% if @usuarios.empty? %>
+          <div class="ui pointing label">
+            Nenhum usuário cadastrado. <%= link_to "Cadastre um usuário primeiro", new_usuario_path %>.
+          </div>
+        <% end %>
+      </div>
+
+      <div class="four wide field">
+        <%= form.submit "Filtrar", class: "ui primary button", disabled: @usuarios.empty? %>
+        <%= link_to "Limpar", corridas_path, class: "ui button" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Lista das Corridas -->
+<% if @corridas.any? %>
+  <div class="ui cards">
+    <% @corridas.each do |corrida| %>
+      <div class="card ride-card">
+        <div class="content">
+          <div class="header">
+            <i class="user icon"></i>
+            <%= corrida.usuario.nome %>
+          </div>
+          <div class="meta">
+            <span class="date">
+              <i class="clock icon"></i>
+              <%= corrida.created_at.strftime("%d/%m/%Y às %H:%M") %>
+            </span>
+          </div>
+          <div class="description">
+            <div class="ui list">
+              <div class="item">
+                <i class="map marker alternate icon green"></i>
+                <div class="content">
+                  <div class="header">Origem</div>
+                  <%= corrida.endereco_partida %>
+                </div>
+              </div>
+              <div class="item">
+                <i class="map marker alternate icon red"></i>
+                <div class="content">
+                  <div class="header">Destino</div>
+                  <%= corrida.endereco_destino %>
+                </div>
+              </div>
+            </div>
+            <span class="ui green label" style="margin-top: 0.5em;">
+              <i class="dollar sign icon"></i>
+              Valor da corrida: R$ <%= number_with_precision(corrida.valor_estimado, precision: 2) %>
+            </span>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="ui three buttons">
+            <%= link_to "Ver", corrida, class: "ui tiny button" %>
+            <%= link_to "Editar", edit_corrida_path(corrida), class: "ui tiny blue button" %>
+            <%= link_to "Excluir", corrida,
+                        data: {
+                          turbo_method: :delete,
+                          turbo_confirm: "Tem certeza que deseja excluir esta corrida?"
+                        },
+                        class: "ui tiny red button" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="ui placeholder segment">
+    <div class="ui icon header">
+      <i class="car icon"></i>
+      <% if params[:usuario_id].present? %>
+        Nenhuma corrida encontrada para o usuário selecionado
+      <% else %>
+        Nenhuma corrida encontrada
+      <% end %>
+    </div>
+    <div class="inline">
+      <%= link_to "Solicitar corrida", new_corrida_path, class: "ui primary button" %>
+      <% if @usuarios.empty? %>
+        ou <%= link_to "Cadastrar um usuário", new_usuario_path, class: "ui button" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+

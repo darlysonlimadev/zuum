@@ -1,0 +1,100 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+
+ @import "semantic-ui";
+
+ /* Custom styles */
+body {
+  background-color: #f8f9fa;
+}
+
+.main-container {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.card-container {
+  margin-bottom: 1rem;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem;
+}
+
+.header-section {
+  margin-bottom: 2rem;
+}
+
+.action-buttons {
+  margin-top: 1rem;
+}
+
+.ride-card {
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.ride-card:hover {
+  transform: translateY(-2px);
+}
+
+.user-info {
+  background: #e8f4fd;
+  border-left: 4px solid #2185d0;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alert {
+  margin-bottom: 1rem;
+}
+
+.navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar .item {
+  color: white !important;
+}
+
+.navbar .item:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+.stats-card {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #0c2c67 0%, #6197f4 100%);
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.stats-number {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stats-label {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}

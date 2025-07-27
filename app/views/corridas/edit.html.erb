@@ -1,0 +1,78 @@
+<% content_for :title, "Editar Corrida" %>
+
+<div class="header-section">
+  <h1 class="ui header">
+    <i class="edit icon"></i>
+    <div class="content">
+      Editar Corrida
+      <div class="sub header">Corrida #<%= @corrida.id %></div>
+    </div>
+  </h1>
+</div>
+
+<div class="form-container">
+  <div class="ui segment">
+    <%= form_with model: @corrida, local: true, class: "ui form" do |form| %>
+      <% if @corrida.errors.any? %>
+        <div class="ui error message">
+          <div class="header">Erro ao atualizar corrida:</div>
+          <ul class="list">
+            <% @corrida.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :usuario_id, "Usuário", class: "ui label" %>
+        <%= form.select :usuario_id,
+                        options_from_collection_for_select(@usuarios, :id, :nome, @corrida.usuario_id),
+                        { prompt: "Selecione o usuário..." },
+                        { class: "ui search dropdown", required: true } %>
+      </div>
+
+      <div class="field">
+        <%= form.label :endereco_partida, "Endereço de Origem", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="map marker alternate icon green"></i>
+          <%= form.text_field :endereco_partida, placeholder: "Ex: Rua das Flores, 123 - Centro", required: true %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= form.label :endereco_destino, "Endereço de Destino", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="map marker alternate icon red"></i>
+          <%= form.text_field :endereco_destino, placeholder: "Ex: Av. Principal, 456 - Bairro Novo", required: true %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= form.label :valor_estimado, "Valor Estimado (R$)", class: "ui label" %>
+        <div class="ui left icon input">
+          <i class="dollar sign icon"></i>
+          <%= form.number_field :valor_estimado, step: 0.01, min: 0.01, placeholder: "0,00", required: true %>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <%= form.submit "Atualizar Corrida", class: "ui primary button" %>
+        <%= link_to "Ver Detalhes", @corrida, class: "ui button" %>
+        <%= link_to "Cancelar", corridas_path, class: "ui button" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#corrida_valor_estimado').on('input', function() {
+            let value = $(this).val();
+            if (value) {
+                value = parseFloat(value).toFixed(2);
+                $(this).val(value);
+            }
+        });
+    });
+</script>

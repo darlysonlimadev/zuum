@@ -1,0 +1,13 @@
+pt-BR:
+  activerecord:
+    errors:
+      models:
+        usuario:
+          attributes:
+            cpf:
+              taken: "já está em uso"
+  errors:
+    messages:
+      taken: "já está em uso"
+      blank: "não pode ficar em branco"
+      invalid: "não é válido"
